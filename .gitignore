@@ -1,0 +1,12 @@
+venv
+tmp
+*.pyc
+staticfiles
+.env
+db.sqlite3
+getting-started/*
+node_modules/*
+dist/*
+.idea/*
+*.iml
+package-lock.json

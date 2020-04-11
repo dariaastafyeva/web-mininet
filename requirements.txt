@@ -1,0 +1,6 @@
+bson==0.5.9
+dnspython==1.16.0
+gunicorn==20.0.4
+flask==1.1.2
+Flask-Caching==1.8.0
+requests==2.23.0
