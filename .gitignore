@@ -9,4 +9,6 @@ node_modules/*
 dist/*
 .idea/*
 *.iml
+mininet/
+venv/
 package-lock.json
