@@ -1,3 +1,7 @@
+
+
+var tmp = 0;
+
 /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
 function openNav() {
   document.getElementById("mySidenav").style.width = "250px";
@@ -229,4 +233,18 @@ function addNode(type){
             
     console.log(node)
 }
-//node = document.getElementById('host-img');
+
+function addLink(){
+    var i1 = document.createElement("input");
+    i1.setAttribute('type',"text");
+    i1.setAttribute('name',"node" + tmp);
+    tmp++
+
+    var i2 = document.createElement("input");
+    i2.setAttribute('type',"text");
+    i2.setAttribute('name',"node" + tmp);
+    tmp++
+
+    document.getElementById('sub-form').appendChild(i1);
+    document.getElementById('sub-form').appendChild(i2);
+}

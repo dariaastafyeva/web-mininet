@@ -32,8 +32,8 @@ def index(path):
 @app.route('/addtop', methods=['POST'])
 def addtop():
     h, s = 1, 1
-    amt_h = int(request.form['input_host'])
-    amt_s = int(request.form['input_switch'])
+    # amt_h = int(request.form['input_host'])
+    # amt_s = int(request.form['input_switch'])
     str_file = """from mininet.node import CPULimitedHost
 from mininet.topo import Topo
 from mininet.net import Mininet
@@ -49,12 +49,12 @@ class SimplePktSwitch(Topo):
         # It uses the constructor for the Topo cloass
         super(SimplePktSwitch, self).__init__(**opts)\n\n"""
 
-    while h <= amt_h:
-        str_file += "        h" + str(h) + " = self.addHost('h" + str(h) + "')\n"
-        h += 1
-    while s <= amt_s:
-        str_file += "        s" + str(s) + " = self.addSwitch('s" + str(s) + "', dpid='000000000000000" + str(s) + "')\n"
-        s += 1
+    # while h <= amt_h:
+    #     str_file += "        h" + str(h) + " = self.addHost('h" + str(h) + "')\n"
+    #     h += 1
+    # while s <= amt_s:
+    #     str_file += "        s" + str(s) + " = self.addSwitch('s" + str(s) + "', dpid='000000000000000" + str(s) + "')\n"
+    #     s += 1
 
     # handle = open("mycode.py", "w")
     # handle.write(str_file)
@@ -62,7 +62,7 @@ class SimplePktSwitch(Topo):
 
     print("hi!")
     print("*******************************************************************************************")
-    os.system("python ~/Documents/web-mininet/mycode.py")
+    # os.system("python ~/Documents/web-mininet/mycode.py")
     print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
     return redirect('index.html')
 

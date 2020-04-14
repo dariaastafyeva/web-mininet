@@ -14,10 +14,18 @@
 <body class="text-center">
 <div id="mySidenav" class="sidenav">
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-    <a></a>
+  <a>Добавить узел:</a>
   <a href="#" onclick="addNode('host')"><img class="side-img" id="host" src="/images/icon-host.png"></a>
   <a href="#" onclick="addNode('switch')"><img class="side-img" src="/images/icon-router.png"></a>
   <a href="#" onclick="addNode('controller')"><img class="side-img" src="/images/icon-controller.png"></a>
+    <div class="div-flex">
+        <a>Добавить связи</a>
+        <span id="plus" class="glyphicon glyphicon-plus" aria-hidden="true" onclick="addLink()"></span>
+    </div>
+    <form method="post" action="/addtop" id="sub-form">
+
+    </form>
+
 </div>
 
 <span onclick="openNav()">open</span>
