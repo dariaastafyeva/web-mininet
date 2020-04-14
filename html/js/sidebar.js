@@ -16,9 +16,11 @@ function addNode(type){
     if(type == 'host'){
         var img = $('<img id="host-img">'); //Equivalent: $(document.createElement('img'))
         img.attr({
-           src: "/images/host.png",
+           src: "/images/icon-host.png",
         });
         img.appendTo('#main');
+        $("#host-img").css("width", "50px");
+        $("#host-img").css("height", "50px");
         hostCount += 1;
         let node = $( "#host-img" ).get( 0 );
         node.onmousedown = function(event) {
@@ -34,12 +36,41 @@ function addNode(type){
             // переносит мяч на координаты (pageX, pageY),
             // дополнительно учитывая изначальный сдвиг относительно указателя мыши
             function moveAt(pageX, pageY) {
-            node.style.left = pageX - shiftX + 'px';
-            node.style.top = pageY - shiftY + 'px';
+                if(pageX <= 280 && pageY <= 10){
+                    node.style.left = '280px';
+                    node.style.top = '10px';
+                    document.removeEventListener('mousemove', onMouseMove);
+                    node.onmouseup = null;
+                }else if(pageX <= 280 && pageY > 10){
+                    node.style.left = '280px';
+                    node.style.top = pageY - shiftY + 'px';
+                    document.removeEventListener('mousemove', onMouseMove);
+                    node.onmouseup = null;
+                }else if(pageY <= 10){
+                    node.style.left = pageX - shiftX + 'px';
+                    node.style.top = '10px';
+                }else{
+                    node.style.left = pageX - shiftX + 'px';
+                    node.style.top = pageY - shiftY + 'px';
+                }
             }
 
             function onMouseMove(event) {
-            moveAt(event.pageX, event.pageY);
+                if(event.pageX <= 280 && event.pageY <= 10){
+                    moveAt(280, 10);
+                    document.removeEventListener('mousemove', onMouseMove);
+                    node.onmouseup = null;
+                }else if(event.pageX <= 280 && event.pageY > 10){
+                    moveAt(280, event.pageY);
+                    document.removeEventListener('mousemove', onMouseMove);
+                    node.onmouseup = null;
+                }else if(event.pageY <= 10){
+                     moveAt(event.pageX, 10);
+                     document.removeEventListener('mousemove', onMouseMove);
+                    node.onmouseup = null;
+                }else{
+                    moveAt(event.pageX, event.pageY);
+                }
             }
 
             // передвигаем мяч при событии mousemove
@@ -47,17 +78,17 @@ function addNode(type){
 
             // отпустить мяч, удалить ненужные обработчики
             node.onmouseup = function() {
-            document.removeEventListener('mousemove', onMouseMove);
-            node.onmouseup = null;
+                document.removeEventListener('mousemove', onMouseMove);
+                node.onmouseup = null;
             };
             node.ondragstart = function() {
-            return false;
+                return false;
             };
-            };
+        };
     }else if(type == 'switch'){
         var img = $('<img id="switch-img">'); //Equivalent: $(document.createElement('img'))
         img.attr({
-           src: "/images/switch.png",
+           src: "/images/icon-router.png",
         });
         img.appendTo('#main');
         switchCount += 1;
@@ -75,12 +106,41 @@ function addNode(type){
             // переносит мяч на координаты (pageX, pageY),
             // дополнительно учитывая изначальный сдвиг относительно указателя мыши
             function moveAt(pageX, pageY) {
-            node.style.left = pageX - shiftX + 'px';
-            node.style.top = pageY - shiftY + 'px';
+                if(pageX <= 280 && pageY <= 10){
+                    node.style.left = '280px';
+                    node.style.top = '10px';
+                    document.removeEventListener('mousemove', onMouseMove);
+                    node.onmouseup = null;
+                }else if(pageX <= 280 && pageY > 10){
+                    node.style.left = '280px';
+                    node.style.top = pageY - shiftY + 'px';
+                    document.removeEventListener('mousemove', onMouseMove);
+                    node.onmouseup = null;
+                }else if(pageY <= 10){
+                    node.style.left = pageX - shiftX + 'px';
+                    node.style.top = '10px';
+                }else{
+                    node.style.left = pageX - shiftX + 'px';
+                    node.style.top = pageY - shiftY + 'px';
+                }
             }
 
             function onMouseMove(event) {
-            moveAt(event.pageX, event.pageY);
+                if(event.pageX <= 280 && event.pageY <= 10){
+                    moveAt(280, 10);
+                    document.removeEventListener('mousemove', onMouseMove);
+                    node.onmouseup = null;
+                }else if(event.pageX <= 280 && event.pageY > 10){
+                    moveAt(280, event.pageY);
+                    document.removeEventListener('mousemove', onMouseMove);
+                    node.onmouseup = null;
+                }else if(event.pageY <= 10){
+                     moveAt(event.pageX, 10);
+                     document.removeEventListener('mousemove', onMouseMove);
+                    node.onmouseup = null;
+                }else{
+                    moveAt(event.pageX, event.pageY);
+                }
             }
 
             // передвигаем мяч при событии mousemove
@@ -88,17 +148,17 @@ function addNode(type){
 
             // отпустить мяч, удалить ненужные обработчики
             node.onmouseup = function() {
-            document.removeEventListener('mousemove', onMouseMove);
-            node.onmouseup = null;
+                document.removeEventListener('mousemove', onMouseMove);
+                node.onmouseup = null;
             };
             node.ondragstart = function() {
-            return false;
+                return false;
             };
-            };
+        };
     }else if(type == 'controller'){
         var img = $('<img id="contr-img">'); //Equivalent: $(document.createElement('img'))
         img.attr({
-           src: "/images/controller.png",
+           src: "/images/icon-controller.png",
         });
         img.appendTo('#main');
         switchCount += 1;
@@ -116,12 +176,41 @@ function addNode(type){
             // переносит мяч на координаты (pageX, pageY),
             // дополнительно учитывая изначальный сдвиг относительно указателя мыши
             function moveAt(pageX, pageY) {
-            node.style.left = pageX - shiftX + 'px';
-            node.style.top = pageY - shiftY + 'px';
+                if(pageX <= 280 && pageY <= 10){
+                    node.style.left = '280px';
+                    node.style.top = '10px';
+                    document.removeEventListener('mousemove', onMouseMove);
+                    node.onmouseup = null;
+                }else if(pageX <= 280 && pageY > 10){
+                    node.style.left = '280px';
+                    node.style.top = pageY - shiftY + 'px';
+                    document.removeEventListener('mousemove', onMouseMove);
+                    node.onmouseup = null;
+                }else if(pageY <= 10){
+                    node.style.left = pageX - shiftX + 'px';
+                    node.style.top = '10px';
+                }else{
+                    node.style.left = pageX - shiftX + 'px';
+                    node.style.top = pageY - shiftY + 'px';
+                }
             }
 
             function onMouseMove(event) {
-            moveAt(event.pageX, event.pageY);
+                if(event.pageX <= 280 && event.pageY <= 10){
+                    moveAt(280, 10);
+                    document.removeEventListener('mousemove', onMouseMove);
+                    node.onmouseup = null;
+                }else if(event.pageX <= 280 && event.pageY > 10){
+                    moveAt(280, event.pageY);
+                    document.removeEventListener('mousemove', onMouseMove);
+                    node.onmouseup = null;
+                }else if(event.pageY <= 10){
+                     moveAt(event.pageX, 10);
+                     document.removeEventListener('mousemove', onMouseMove);
+                    node.onmouseup = null;
+                }else{
+                    moveAt(event.pageX, event.pageY);
+                }
             }
 
             // передвигаем мяч при событии mousemove
@@ -129,13 +218,13 @@ function addNode(type){
 
             // отпустить мяч, удалить ненужные обработчики
             node.onmouseup = function() {
-            document.removeEventListener('mousemove', onMouseMove);
-            node.onmouseup = null;
+                document.removeEventListener('mousemove', onMouseMove);
+                node.onmouseup = null;
             };
             node.ondragstart = function() {
-            return false;
+                return false;
             };
-            };
+        };
     }
             
     console.log(node)
