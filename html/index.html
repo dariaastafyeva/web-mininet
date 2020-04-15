@@ -1,44 +1,38 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тест</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="/css/sidebar.css">
-    <script src="/js/jquery-3.4.1.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/sidebar.js"></script>
-</head>
-<body class="text-center">
-<div id="mySidenav" class="sidenav">
-  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-  <a>Добавить узел:</a>
-  <a href="#" onclick="addNode('host')"><img class="side-img" id="host" src="/images/icon-host.png"></a>
-  <a href="#" onclick="addNode('switch')"><img class="side-img" src="/images/icon-router.png"></a>
-  <a href="#" onclick="addNode('controller')"><img class="side-img" src="/images/icon-controller.png"></a>
-    <div class="div-flex">
-        <a>Добавить связи</a>
-        <span id="plus" class="glyphicon glyphicon-plus" aria-hidden="true" onclick="addLink()"></span>
-    </div>
-    <form method="post" action="/addtop" id="sub-form">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Тест</title>
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="/css/sidebar.css">
+        <link rel="stylesheet" href="/css/main.css">
+        <script src="/js/jquery-3.4.1.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        <script src="/js/sidebar.js"></script>
+    </head>
+    <body class="text-center">
+        <div id="mySidenav" class="sidenav">
+          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+          <a>Добавить узел:</a>
+          <a href="#" onclick="addNode('host')"><img class="side-img" id="host" src="/images/icon-host.png"></a>
+          <a href="#" onclick="addNode('switch')"><img class="side-img" src="/images/icon-switch.png"></a>
+          <a href="#" onclick="addNode('controller')"><img class="side-img" src="/images/icon-controller.png"></a>
+            <div class="div-flex">
+                <input class="form-check-input" type="checkbox" id="checkLinks" value="option1">
+                <a>Добавить связи</a>
+                <span id="plus" class="glyphicon glyphicon-plus" aria-hidden="true" onclick="addLink()"></span>
+            </div>
+            <form method="post" action="/addtop" id="sub-form">
 
-    </form>
+            </form>
 
-</div>
+        </div>
 
-<span onclick="openNav()">open</span>
+        <span onclick="openNav()">open</span>
 
-<div id="main">
-  <h2>Add Topology</h2>
-<!--    <form method="post" action="/addtop">-->
-<!--        <p>Hosts amount:</p>-->
-<!--        <input type="text" id="input-host" name="input_host">-->
-<!--        <p>Switches amount:</p>-->
-<!--        <input type="text" id="input-switch" name="input_switch">-->
-<!--        <button type="submit">Add topology</button>-->
-<!--    </form>-->
-</div>
-</body>
+        <div id="main">
+        </div>
+    </body>
 </html>
