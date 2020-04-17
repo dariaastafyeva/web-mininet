@@ -4,7 +4,12 @@
     position: fixed;
 }
 
-#svg-1 {
+svg {
     width: 100%;
     height: 100%;
+}
+line {
+    stroke:#7B68EE;
+    stroke-width:2;
+    /*position: absolute;*/
 }

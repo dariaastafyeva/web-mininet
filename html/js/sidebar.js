@@ -1,7 +1,7 @@
 
 
 var tmp = 0;
-var hostsArray = switchesArray = controllersArray = [];
+var hostsArray = [],switchesArray = [], controllersArray = [];
 var nodes = [];
 
 //
@@ -18,7 +18,7 @@ var nodes = [];
 //}
 
 function addNode(type){
-    hostCount = switchCount = contCount = 0;
+    hostCount = 0, switchCount = 0, controllerCount = 0;
 
     if(type == 'host'){
         mouseHelper('host');
@@ -53,7 +53,7 @@ function mouseHelper(type){
         img.appendTo('#main');
         $("#" + type + id + "-img").css("width", "50px");
         $("#" + type + id + "-img").css("height", "50px");
-        hostCount += 1;
+        switchCount += 1;
         node = $( "#" + type + id + "-img" ).get( 0 );
         switchesArray.push(img);
     }else{
@@ -65,7 +65,7 @@ function mouseHelper(type){
         img.appendTo('#main');
         $("#" + type + id + "-img").css("width", "50px");
         $("#" + type + id + "-img").css("height", "50px");
-        hostCount += 1;
+        controllerCount += 1;
         node = $( "#" + type + id + "-img" ).get( 0 );
         controllersArray.push(img);
     }
@@ -135,18 +135,34 @@ function mouseHelper(type){
         }else{
             if(nodes.length < 2 && !nodes.includes(node)){
                 nodes.push(node);
-                $("#" + node.id).css( "border", "3px solid red" );
+                $("#" + node.id).css( "border", "3px solid #7B68EE" );
             }else if (nodes.length == 2){
-                var a = $('<svg id="svg-1">' +
-                    '<line x1="' + nodes[0].getBoundingClientRect().left + '" y1="' +
-                      nodes[0].getBoundingClientRect().top +
-                      '" x2="' + nodes[1].getBoundingClientRect().left +
-                      '" y2="' +
-                      nodes[1].getBoundingClientRect().top +
-                      '" style="stroke:rgb(255,0,0);stroke-width:2;position: absolute, z-index: 1000;"/>' +
+                top0 = nodes[0].getBoundingClientRect().top + 10;
+                top1 = nodes[1].getBoundingClientRect().top + 10;
+                left0 = nodes[0].getBoundingClientRect().left + 10;
+                left1 = nodes[1].getBoundingClientRect().left + 10;
+                if(!$('#svg-id').length){
+                    $('<svg id="svg-id">' +
+                      '<line x1="' + left0 +
+                      '" x2="' + left1 +
+                      '" y1="' + top0 +
+                      '" y2="' + top1 +
+                      '"/>' +
                       '</svg>').appendTo('#main');
-                    nodes = [];
-                    console.log("++++")
+                  }else{
+                  $('<line x1="' + left0 +
+                    '" x2="' + left1 +
+                    '" y1="' + top0 +
+                    '" y2="' + top1 +
+                    '"/>').appendTo('#svg-id');
+                  }
+                  console.log(nodes[0].getBoundingClientRect().left);
+                  console.log(nodes[0].getBoundingClientRect().top);
+                  console.log(nodes[1].getBoundingClientRect().left);
+                  console.log(nodes[1].getBoundingClientRect().top);
+                $("#" + nodes[0].id).css( "border", "none" );
+                $("#" + nodes[1].id).css( "border", "none" );
+                nodes = [];
             }
         }
     };
@@ -175,9 +191,4 @@ function addLink(){
 
     document.getElementById('sub-form').appendChild(i1);
     document.getElementById('sub-form').appendChild(i2);
-
-    var a = $('<svg id="svg-id" height="210" width="500">' +
-                  '<line x1="280" y1="10" x2="480" y2="210" style="stroke:rgb(255,0,0);stroke-width:2" />' +
-              '</svg>');
-    $('#main').append(a);
 }
