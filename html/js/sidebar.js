@@ -74,6 +74,12 @@ function mouseHelper(type){
         let shiftX = event.clientX - node.getBoundingClientRect().left;
         let shiftY = event.clientY - node.getBoundingClientRect().top;
         if(!validateTerms()){
+            if(nodes.length > 1){
+                $("#" + nodes[0].id).css( "border", "none" );
+                $("#" + nodes[1].id).css( "border", "none" );
+            }else if (nodes.length == 1)
+                $("#" + nodes[0].id).css( "border", "none" );
+            nodes = [];
             node.style.position = 'absolute';
             node.style.zIndex = 1000;
 //            node.appendTo('#main');
@@ -150,11 +156,14 @@ function mouseHelper(type){
                       '"/>' +
                       '</svg>').appendTo('#main');
                   }else{
-                  $('<line x1="' + left0 +
-                    '" x2="' + left1 +
-                    '" y1="' + top0 +
-                    '" y2="' + top1 +
-                    '"/>').appendTo('#svg-id');
+                    let oldHtml = $('#svg-id').html();
+                    let offset = $('#svg-id').children().length * 10;
+                    $('#svg-id').html(oldHtml +
+                        '<line x1="' + (left0 + offset) +
+                        '" x2="' + (left1 + offset) +
+                        '" y1="' + top0  +
+                        '" y2="' + top1 +
+                        '"/>');
                   }
                   console.log(nodes[0].getBoundingClientRect().left);
                   console.log(nodes[0].getBoundingClientRect().top);
