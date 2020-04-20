@@ -11,7 +11,7 @@ from mininet.cli import CLI
 from mininet.link import Link, TCLink, Intf
 from mininet.node import CPULimitedHost, Node, Host, Controller, Switch, OVSSwitch, UserSwitch, RemoteController, NOX, OVSController
 from mininet.topo import Topo, SingleSwitchTopo, LinearTopo, SingleSwitchReversedTopo
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, jsonify
 from collections import namedtuple
 from functools import partial
 
@@ -31,6 +31,8 @@ def index(path):
 
 @app.route('/addtop', methods=['POST'])
 def addtop():
+    print("+++++++++++++++++")
+    print(request.get_json())
     h, s = 1, 1
     # amt_h = int(request.form['input_host'])
     # amt_s = int(request.form['input_switch'])

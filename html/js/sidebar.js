@@ -22,6 +22,10 @@ class Host {
         this.id = id;
         this.arrLinks = arrLinks;
     }
+
+    toObject() {
+        return "{id:" + this.id + ", arrLinks:" + this.arrLinks + "}"
+    }
 }
 
 class Switch {
@@ -201,6 +205,7 @@ function mouseHelper(type) {
                 }
                 $("#" + nodes[0].id).css("border", "none");
                 $("#" + nodes[1].id).css("border", "none");
+
                 nodes = [];
             }
         }
@@ -230,4 +235,16 @@ function addLink() {
 
     document.getElementById('sub-form').appendChild(i1);
     document.getElementById('sub-form').appendChild(i2);
+}
+
+function sendLinks() {
+    console.log(hostsArray.map(value => value.toObject()));
+    $.ajax({
+            method: "POST",
+            url: "/addtop",
+            data: { hostArr: hostsArray.map(value => value.toObject()) }
+        })
+        .done(function(msg) {
+            alert("Data Saved: " + msg);
+        });
 }
