@@ -29,7 +29,7 @@ class Host {
     }
 
     toObject() {
-        return '{"id":' + '"' + this.id + '"' + ', " arrLinks":' + '[' + this.getLinks() + ']' + '}'
+        return '{"id":' + '"' + this.id + '"' + ', "arrLinks":' + '[' + this.getLinks() + ']' + '}'
     }
 }
 
@@ -37,6 +37,14 @@ class Switch {
     constructor(id, arrLinks) {
         this.id = id;
         this.arrLinks = arrLinks
+    }
+    getLinks() {
+        console.log(this.arrLinks.map(value => '"' + value + '"'));
+        return this.arrLinks.map(value => '"' + value + '"')
+    }
+
+    toObject() {
+        return '{"id":' + '"' + this.id + '"' + ', "arrLinks":' + '[' + this.getLinks() + ']' + '}'
     }
 }
 
@@ -62,38 +70,38 @@ function mouseHelper(type) {
     if (!validateTerms()) {
         if (type == 'host') {
             id = hostsArray.length;
-            var img = $('<img id="' + type + id + '-img">'); //Equivalent: $(document.createElement('img'))
+            var img = $('<img id="' + type + id + '">'); //Equivalent: $(document.createElement('img'))
             img.attr({
                 src: "/images/icon-" + type + ".png",
             });
             img.prependTo('#main');
-            $("#" + type + id + "-img").css("width", "50px");
-            $("#" + type + id + "-img").css("height", "50px");
-            node = $("#" + type + id + "-img").get(0);
+            $("#" + type + id).css("width", "50px");
+            $("#" + type + id).css("height", "50px");
+            node = $("#" + type + id).get(0);
             host = new Host(img.get(0).id, []);
             hostsArray.push(host);
         } else if (type == 'switch') {
             id = switchesArray.length;
-            var img = $('<img id="' + type + id + '-img">'); //Equivalent: $(document.createElement('img'))
+            var img = $('<img id="' + type + id + '">'); //Equivalent: $(document.createElement('img'))
             img.attr({
                 src: "/images/icon-" + type + ".png",
             });
             img.prependTo('#main');
-            $("#" + type + id + "-img").css("width", "50px");
-            $("#" + type + id + "-img").css("height", "50px");
-            node = $("#" + type + id + "-img").get(0);
+            $("#" + type + id).css("width", "50px");
+            $("#" + type + id).css("height", "50px");
+            node = $("#" + type + id).get(0);
             sw = new Switch(img.get(0).id, []);
             switchesArray.push(sw);
         } else {
             id = controllersArray.length;
-            var img = $('<img id="' + type + id + '-img">'); //Equivalent: $(document.createElement('img'))
+            var img = $('<img id="' + type + id + '">'); //Equivalent: $(document.createElement('img'))
             img.attr({
                 src: "/images/icon-" + type + ".png",
             });
             img.prependTo('#main');
-            $("#" + type + id + "-img").css("width", "50px");
-            $("#" + type + id + "-img").css("height", "50px");
-            node = $("#" + type + id + "-img").get(0);
+            $("#" + type + id).css("width", "50px");
+            $("#" + type + id).css("height", "50px");
+            node = $("#" + type + id).get(0);
             cont = new Controller(img.get(0).id, []);
             controllersArray.push(cont);
         }
@@ -176,15 +184,11 @@ function mouseHelper(type) {
                     hostsArray.find(element => element.id == nodes[0].id).arrLinks.push(nodes[1].id);
                 } else if (nodes[0].id.includes('host') && nodes[1].id.includes('host')) { // если оба узла - хосты
                     hostsArray.find(element => element.id == nodes[0].id).arrLinks.push(nodes[1].id);
-                    hostsArray.find(element => element.id == nodes[1].id).arrLinks.push(nodes[0].id);
+//                    hostsArray.find(element => element.id == nodes[1].id).arrLinks.push(nodes[0].id);
                 } else if (nodes[0].id.includes('switch') && nodes[1].id.includes('switch')) { // если оба узла - роутеры
                     switchesArray.find(element => element.id == nodes[0].id).arrLinks.push(nodes[1].id);
-                    switchesArray.find(element => element.id == nodes[1].id).arrLinks.push(nodes[0].id);
+//                    switchesArray.find(element => element.id == nodes[1].id).arrLinks.push(nodes[0].id);
                 }
-
-                console.log("++++++++++++++++");
-                console.log(hostsArray);
-                console.log(switchesArray);
 
                 top0 = nodes[0].getBoundingClientRect().top + 5;
                 top1 = nodes[1].getBoundingClientRect().top + 5;
@@ -247,7 +251,8 @@ function sendLinks() {
         type: 'POST',
         url: "/addtop",
         data: JSON.stringify({
-            "hostArr": '[' + hostsArray.map(value => value.toObject()) + ']'
+            'hostArr': '[' + hostsArray.map(value => value.toObject()) + ']',
+            'switchArr': '[' + switchesArray.map(value => value.toObject()) + ']'
         }),
         error: function(e) {
             console.log(e);

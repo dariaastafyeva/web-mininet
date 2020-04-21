@@ -1,4 +1,5 @@
 import os
+import json
 import sys
 from mininet.log import info, setLogLevel
 from mininet.net import Mininet, VERSION
@@ -32,10 +33,23 @@ def index(path):
 @app.route('/addtop', methods=['POST'])
 def addtop():
     print("+++++++++++++++++")
-    print(request.get_json(force=True))
+    # json_string = request.get_json(force=True)
+    # print(json_string)
+    # a = json.loads(json_string['hostArr'])
+    # print("*******************")
+    # print(len(a))
+    # print(a[0])
+    # print(a[0]['id'])
+    # b = a[1][' arrLinks']
+    # print(type(b))
+    # print(b)
+
+    dict_str = request.get_json(force=True)
+    hosts_list = json.loads(dict_str['hostArr'])
+    switches_list = json.loads(dict_str['switchArr'])
     h, s = 1, 1
-    # amt_h = int(request.form['input_host'])
-    # amt_s = int(request.form['input_switch'])
+    amt_h = len(hosts_list)
+    amt_s = len(switches_list)
     str_file = """from mininet.node import CPULimitedHost
 from mininet.topo import Topo
 from mininet.net import Mininet
@@ -58,11 +72,31 @@ class SimplePktSwitch(Topo):
     #     str_file += "        s" + str(s) + " = self.addSwitch('s" + str(s) + "', dpid='000000000000000" + str(s) + "')\n"
     #     s += 1
 
+    for host in hosts_list:
+        hid = host['id']
+        str_file += "        h" + hid[4:] + " = self.addHost('h" + hid[4:] + "')\n"
+
+    for switch in switches_list:
+        sid = switch['id']
+        str_file += "        s" + sid[6:] + " = self.addSwitch('s" + sid[6:] + "', dpid='000000000000000" + sid[6:] + "')\n"
+
+    for host in hosts_list:
+        if len(host['arrLinks']):
+            hid = host['id']
+            for link in host['arrLinks']:
+                if 'host' in link:
+                    tmp = 'h'
+                    link_id = link[4:]
+                else:
+                    tmp = 's'
+                    link_id = link[6:]
+                str_file += "        self.addLink(h" + hid[4:] + ", " + tmp + link_id + ")\n"
+
     # handle = open("mycode.py", "w")
     # handle.write(str_file)
     # handle.close()
 
-    print("hi!")
+    print(str_file)
     print("*******************************************************************************************")
     # os.system("python ~/Documents/web-mininet/mycode.py")
     print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
