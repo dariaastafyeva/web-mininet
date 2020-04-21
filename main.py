@@ -32,7 +32,7 @@ def index(path):
 @app.route('/addtop', methods=['POST'])
 def addtop():
     print("+++++++++++++++++")
-    print(request.get_json())
+    print(request.get_json(force=True))
     h, s = 1, 1
     # amt_h = int(request.form['input_host'])
     # amt_s = int(request.form['input_switch'])

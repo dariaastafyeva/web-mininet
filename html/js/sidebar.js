@@ -23,8 +23,13 @@ class Host {
         this.arrLinks = arrLinks;
     }
 
+    getLinks() {
+        console.log(this.arrLinks.map(value => '"' + value + '"'));
+        return this.arrLinks.map(value => '"' + value + '"')
+    }
+
     toObject() {
-        return "{id:" + this.id + ", arrLinks:" + this.arrLinks + "}"
+        return '{"id":' + '"' + this.id + '"' + ', " arrLinks":' + '[' + this.getLinks() + ']' + '}'
     }
 }
 
@@ -238,13 +243,16 @@ function addLink() {
 }
 
 function sendLinks() {
-    console.log(hostsArray.map(value => value.toObject()));
     $.ajax({
-            method: "POST",
-            url: "/addtop",
-            data: { hostArr: hostsArray.map(value => value.toObject()) }
-        })
-        .done(function(msg) {
-            alert("Data Saved: " + msg);
-        });
+        type: 'POST',
+        url: "/addtop",
+        data: JSON.stringify({
+            "hostArr": '[' + hostsArray.map(value => value.toObject()) + ']'
+        }),
+        error: function(e) {
+            console.log(e);
+        },
+        dataType: "json",
+        contentType: "application/json"
+    });
 }
