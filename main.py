@@ -65,20 +65,17 @@ class SimplePktSwitch(Topo):
         # It uses the constructor for the Topo cloass
         super(SimplePktSwitch, self).__init__(**opts)\n\n"""
 
-    # while h <= amt_h:
-    #     str_file += "        h" + str(h) + " = self.addHost('h" + str(h) + "')\n"
-    #     h += 1
-    # while s <= amt_s:
-    #     str_file += "        s" + str(s) + " = self.addSwitch('s" + str(s) + "', dpid='000000000000000" + str(s) + "')\n"
-    #     s += 1
-
     for host in hosts_list:
         hid = host['id']
         str_file += "        h" + hid[4:] + " = self.addHost('h" + hid[4:] + "')\n"
 
+    str_file += "\n"
+
     for switch in switches_list:
         sid = switch['id']
         str_file += "        s" + sid[6:] + " = self.addSwitch('s" + sid[6:] + "', dpid='000000000000000" + sid[6:] + "')\n"
+
+    str_file += "\n"
 
     for host in hosts_list:
         if len(host['arrLinks']):
@@ -91,6 +88,37 @@ class SimplePktSwitch(Topo):
                     tmp = 's'
                     link_id = link[6:]
                 str_file += "        self.addLink(h" + hid[4:] + ", " + tmp + link_id + ")\n"
+
+    str_file += "\n"
+
+    for switch in switches_list:
+        if len(switch['arrLinks']):
+            cid = switch['id']
+            for link in switch['arrLinks']:
+                str_file += "        self.addLink(s" + cid[6:] + ", s" + link[6:] + ")\n"
+
+    str_file += "\n"
+    str_file += """def run():
+    c = RemoteController('c', '0.0.0.0', 6633)
+    net = Mininet(topo=SimplePktSwitch(), host=CPULimitedHost, controller=None)
+    net.addController(c)
+    net.start()
+    #net.pingAll()
+    info('*** Routing Table on Router:\\n')
+    hosts = net.hosts
+    server = hosts[0]
+    outfile = 'myinfo.out'
+    errfile = 'myerror.err'
+    hosts[1].cmdPrint('ping', server.IP(),
+               '>', outfile,
+               '2>', errfile,
+               '&')
+    net.stop()
+    
+if __name__ == '__main__':
+    setLogLevel('info')
+    run()
+    """
 
     # handle = open("mycode.py", "w")
     # handle.write(str_file)

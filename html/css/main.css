@@ -11,5 +11,7 @@ svg {
 line {
     stroke:#7B68EE;
     stroke-width:2;
-    /*position: absolute;*/
+}
+
+node:{
 }

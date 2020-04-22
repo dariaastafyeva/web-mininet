@@ -168,11 +168,19 @@ function mouseHelper(type) {
             node.onmouseup = function() {
                 document.removeEventListener('mousemove', onMouseMove);
                 node.onmouseup = null;
+                console.log('******************');
+                console.log(node.id);
+                console.log(node.getBoundingClientRect().top);
+                console.log(node.getBoundingClientRect().left);
+                console.log(node.style.top);
+                console.log(node.style.left);
             };
             node.ondragstart = function() {
                 return false;
             };
         } else {
+
+
             if (nodes.length < 2 && !nodes.includes(node)) {
                 nodes.push(node);
                 $("#" + node.id).css("border", "3px solid #7B68EE");
@@ -184,16 +192,17 @@ function mouseHelper(type) {
                     hostsArray.find(element => element.id == nodes[0].id).arrLinks.push(nodes[1].id);
                 } else if (nodes[0].id.includes('host') && nodes[1].id.includes('host')) { // если оба узла - хосты
                     hostsArray.find(element => element.id == nodes[0].id).arrLinks.push(nodes[1].id);
-//                    hostsArray.find(element => element.id == nodes[1].id).arrLinks.push(nodes[0].id);
                 } else if (nodes[0].id.includes('switch') && nodes[1].id.includes('switch')) { // если оба узла - роутеры
                     switchesArray.find(element => element.id == nodes[0].id).arrLinks.push(nodes[1].id);
-//                    switchesArray.find(element => element.id == nodes[1].id).arrLinks.push(nodes[0].id);
                 }
 
-                top0 = nodes[0].getBoundingClientRect().top + 5;
-                top1 = nodes[1].getBoundingClientRect().top + 5;
-                left0 = nodes[0].getBoundingClientRect().left + 5;
-                left1 = nodes[1].getBoundingClientRect().left + 5;
+                top0 = +nodes[0].style.top.slice(0,-2) + 10;
+                top1 = +nodes[1].style.top.slice(0,-2) + 10;
+                left0 = +nodes[0].style.left.slice(0,-2) + 10;
+                left1 = +nodes[1].style.left.slice(0,-2) + 10;
+
+                console.log('******************');
+
                 if (!$('#svg-id').length) {
                     $('<svg id="svg-id">' +
                         '<line x1="' + left0 +
@@ -204,10 +213,10 @@ function mouseHelper(type) {
                         '</svg>').appendTo('#main');
                 } else {
                     let oldHtml = $('#svg-id').html();
-                    let offset = $('#svg-id').children().length * 10;
+//                    let offset = $('#svg-id').children().length * 10;
                     $('#svg-id').html(oldHtml +
-                        '<line x1="' + (left0 + offset) +
-                        '" x2="' + (left1 + offset) +
+                        '<line x1="' + (left0) +
+                        '" x2="' + (left1) +
                         '" y1="' + top0 +
                         '" y2="' + top1 +
                         '"/>');
