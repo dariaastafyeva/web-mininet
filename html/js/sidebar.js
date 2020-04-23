@@ -18,13 +18,14 @@ var hostsArray = [],
 var nodes = [];
 
 class Host {
-    constructor(id, arrLinks) {
+    constructor(id, arrLinks, links_ids) {
         this.id = id;
         this.arrLinks = arrLinks;
+        this.links_ids = links_ids
     }
 
     getLinks() {
-        console.log(this.arrLinks.map(value => '"' + value + '"'));
+//        console.log(this.arrLinks.map(value => '"' + value + '"'));
         return this.arrLinks.map(value => '"' + value + '"')
     }
 
@@ -34,12 +35,13 @@ class Host {
 }
 
 class Switch {
-    constructor(id, arrLinks) {
+    constructor(id, arrLinks, links_ids) {
         this.id = id;
         this.arrLinks = arrLinks
+        this.links_ids = links_ids
     }
     getLinks() {
-        console.log(this.arrLinks.map(value => '"' + value + '"'));
+//        console.log(this.arrLinks.map(value => '"' + value + '"'));
         return this.arrLinks.map(value => '"' + value + '"')
     }
 
@@ -78,7 +80,7 @@ function mouseHelper(type) {
             $("#" + type + id).css("width", "50px");
             $("#" + type + id).css("height", "50px");
             node = $("#" + type + id).get(0);
-            host = new Host(img.get(0).id, []);
+            host = new Host(img.get(0).id, [], []);
             hostsArray.push(host);
         } else if (type == 'switch') {
             id = switchesArray.length;
@@ -90,7 +92,7 @@ function mouseHelper(type) {
             $("#" + type + id).css("width", "50px");
             $("#" + type + id).css("height", "50px");
             node = $("#" + type + id).get(0);
-            sw = new Switch(img.get(0).id, []);
+            sw = new Switch(img.get(0).id, [], []);
             switchesArray.push(sw);
         } else {
             id = controllersArray.length;
@@ -102,7 +104,7 @@ function mouseHelper(type) {
             $("#" + type + id).css("width", "50px");
             $("#" + type + id).css("height", "50px");
             node = $("#" + type + id).get(0);
-            cont = new Controller(img.get(0).id, []);
+            cont = new Controller(img.get(0).id, [], []);
             controllersArray.push(cont);
         }
     }
@@ -120,7 +122,8 @@ function mouseHelper(type) {
             node.style.zIndex = 1000;
             document.getElementById("main").appendChild(node)
             moveAt(event.pageX, event.pageY);
-
+            var oldLeft,oldtop;
+            var flag = 0;
             // переносит узел на координаты (pageX, pageY),
             // дополнительно учитывая изначальный сдвиг относительно указателя мыши
             function moveAt(pageX, pageY) {
@@ -138,6 +141,11 @@ function mouseHelper(type) {
                     node.style.left = pageX - shiftX + 'px';
                     node.style.top = '10px';
                 } else {
+                    if(!flag){
+                        oldLeft = node.style.left;
+                        oldTop = node.style.top;
+                        flag = 1;
+                    }
                     node.style.left = pageX - shiftX + 'px';
                     node.style.top = pageY - shiftY + 'px';
                 }
@@ -158,6 +166,22 @@ function mouseHelper(type) {
                     node.onmouseup = null;
                 } else {
                     moveAt(event.pageX, event.pageY);
+                    lids = hostsArray.find(element => element.id == node.id).links_ids;
+                    if(lids.length){
+                        for (const id of lids){
+                            console.log(document.getElementById(id).x1.animVal.value);
+                            console.log(document.getElementById(id).y1.animVal.value);
+                            if(document.getElementById(id).x1.animVal.value == oldLeft){
+                                document.getElementById(id).setAttribute('x1', node.style.left);
+                                document.getElementById(id).setAttribute('y1', node.style.top);
+                            }else{
+                                document.getElementById(id).setAttribute('x2', node.style.left);
+                                document.getElementById(id).setAttribute('y2', node.style.top);
+                                console.log(document.getElementById(id).x1.animVal.value);
+                                console.log(document.getElementById(id).y1.animVal.value);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -168,12 +192,12 @@ function mouseHelper(type) {
             node.onmouseup = function() {
                 document.removeEventListener('mousemove', onMouseMove);
                 node.onmouseup = null;
-                console.log('******************');
-                console.log(node.id);
-                console.log(node.getBoundingClientRect().top);
-                console.log(node.getBoundingClientRect().left);
-                console.log(node.style.top);
-                console.log(node.style.left);
+//                console.log('******************');
+//                console.log(node.id);
+//                console.log(node.getBoundingClientRect().top);
+//                console.log(node.getBoundingClientRect().left);
+//                console.log(node.style.top);
+//                console.log(node.style.left);
             };
             node.ondragstart = function() {
                 return false;
@@ -196,30 +220,30 @@ function mouseHelper(type) {
                     switchesArray.find(element => element.id == nodes[0].id).arrLinks.push(nodes[1].id);
                 }
 
-                top0 = +nodes[0].style.top.slice(0,-2) + 10;
-                top1 = +nodes[1].style.top.slice(0,-2) + 10;
-                left0 = +nodes[0].style.left.slice(0,-2) + 10;
-                left1 = +nodes[1].style.left.slice(0,-2) + 10;
-
-                console.log('******************');
+                top0 = +nodes[0].style.top.slice(0,-2) + 20;
+                top1 = +nodes[1].style.top.slice(0,-2) + 20;
+                left0 = +nodes[0].style.left.slice(0,-2) + 20;
+                left1 = +nodes[1].style.left.slice(0,-2) + 20;
 
                 if (!$('#svg-id').length) {
                     $('<svg id="svg-id">' +
-                        '<line x1="' + left0 +
+                        '<line id="link-' + nodes[0].id + nodes[1].id + '" x1="' + left0 +
                         '" x2="' + left1 +
                         '" y1="' + top0 +
                         '" y2="' + top1 +
                         '"/>' +
                         '</svg>').appendTo('#main');
+                     addLinksIds(nodes[0], nodes[1], 'link-' + nodes[0].id + nodes[1].id)
                 } else {
                     let oldHtml = $('#svg-id').html();
 //                    let offset = $('#svg-id').children().length * 10;
                     $('#svg-id').html(oldHtml +
-                        '<line x1="' + (left0) +
+                        '<line id="link-' + nodes[0].id + nodes[1].id + '" x1="' + (left0) +
                         '" x2="' + (left1) +
                         '" y1="' + top0 +
                         '" y2="' + top1 +
                         '"/>');
+                    addLinksIds(nodes[0], nodes[1], 'link-' + nodes[0].id + nodes[1].id)
                 }
                 $("#" + nodes[0].id).css("border", "none");
                 $("#" + nodes[1].id).css("border", "none");
@@ -229,6 +253,22 @@ function mouseHelper(type) {
         }
     };
 
+}
+
+function addLinksIds(node0, node1, id){
+    if (node0.id.includes('switch') && node1.id.includes('host')) {
+        switchesArray.find(element => element.id == node0.id).links_ids.push(id);
+        hostsArray.find(element => element.id == node1.id).links_ids.push(id);
+    } else if (node0.id.includes('host') && node1.id.includes('switch')) {
+        switchesArray.find(element => element.id == node1.id).links_ids.push(id);
+        hostsArray.find(element => element.id == node0.id).links_ids.push(id);
+    } else if (node0.id.includes('host') && node1.id.includes('host')) { // если оба узла - хосты
+        hostsArray.find(element => element.id == node0.id).links_ids.push(id);
+        hostsArray.find(element => element.id == node1.id).links_ids.push(id);
+    } else if (node0.id.includes('switch') && node1.id.includes('switch')) { // если оба узла - роутеры
+        switchesArray.find(element => element.id == node0.id).links_ids.push(id);
+        switchesArray.find(element => element.id == node1.id).links_ids.push(id);
+    }
 }
 
 function validateTerms() {

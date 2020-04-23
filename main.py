@@ -114,7 +114,7 @@ if __name__ == '__main__':
 
     print(str_file)
     print("*******************************************************************************************")
-    os.system("echo ra456897 | sudo -S python ~/Documents/web-mininet/mycode.py")
+    # os.system("echo ra456897 | sudo -S python ~/Documents/web-mininet/mycode.py")
     print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
     return redirect('index.html')
 
