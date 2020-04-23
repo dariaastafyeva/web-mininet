@@ -30,10 +30,10 @@ class SimplePktSwitch(Topo):
         h4 = self.addHost('h4')
 
         # Adding switches
-        s1 = self.addSwitch('s1', dpid="0000000000000001")
-        s2 = self.addSwitch('s2', dpid="0000000000000002")
-        s3 = self.addSwitch('s3', dpid="0000000000000003")
-        s4 = self.addSwitch('s4', dpid="0000000000000004")
+        s1 = self.addSwitch('s1', dpid='0000000000000001')
+        s2 = self.addSwitch('s2', dpid='0000000000000002')
+        s3 = self.addSwitch('s3', dpid='0000000000000003')
+        s4 = self.addSwitch('s4', dpid='0000000000000004')
 
         # Add links
         self.addLink(h1, s1)
