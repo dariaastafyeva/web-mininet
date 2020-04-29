@@ -114,7 +114,18 @@ if __name__ == '__main__':
 
     print(str_file)
     print("*******************************************************************************************")
-    # os.system("echo ra456897 | sudo -S python ~/Documents/web-mininet/mycode.py")
+    os.system("sudo mn -c")
+    os.system("sudo apt-get install openvswitch-testcontroller")
+    os.system("sudo cp /usr/bin/ovs-testcontroller /usr/bin/ovs-controller")
+    os.system("echo ra456897 | sudo python ~/Documents/web-mininet/new_topo_1.py")
+    f = open("myinfo.out", "r")
+    if f.mode == 'r':
+        contents = f.read()
+        print(contents)
+    f2 = open("myerror.err", "r")
+    if f2.mode == 'r':
+        contents = f2.read()
+        print(contents)
     print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
     return redirect('index.html')
 
