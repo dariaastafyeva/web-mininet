@@ -17,6 +17,11 @@ var hostsArray = [],
     controllersArray = [];
 var nodes = [];
 
+$(document).ready(function($) {
+    document.oncontextmenu = function() { return false; }; //отключить выпадающее меню
+
+});
+
 class Host {
     constructor(id, arrLinks, links_ids) {
         this.id = id;
@@ -25,7 +30,7 @@ class Host {
     }
 
     getLinks() {
-//        console.log(this.arrLinks.map(value => '"' + value + '"'));
+        //        console.log(this.arrLinks.map(value => '"' + value + '"'));
         return this.arrLinks.map(value => '"' + value + '"')
     }
 
@@ -41,7 +46,7 @@ class Switch {
         this.links_ids = links_ids
     }
     getLinks() {
-//        console.log(this.arrLinks.map(value => '"' + value + '"'));
+        //        console.log(this.arrLinks.map(value => '"' + value + '"'));
         return this.arrLinks.map(value => '"' + value + '"')
     }
 
@@ -112,6 +117,7 @@ function mouseHelper(type) {
         let shiftX = event.clientX - node.getBoundingClientRect().left;
         let shiftY = event.clientY - node.getBoundingClientRect().top;
         if (!validateTerms()) {
+
             if (nodes.length > 1) {
                 $("#" + nodes[0].id).css("border", "none");
                 $("#" + nodes[1].id).css("border", "none");
@@ -122,7 +128,7 @@ function mouseHelper(type) {
             node.style.zIndex = 1000;
             document.getElementById("main").appendChild(node)
             moveAt(event.pageX, event.pageY);
-            var oldLeft,oldtop;
+            var oldLeft, oldtop;
             var flag = 0;
             // переносит узел на координаты (pageX, pageY),
             // дополнительно учитывая изначальный сдвиг относительно указателя мыши
@@ -141,7 +147,7 @@ function mouseHelper(type) {
                     node.style.left = pageX - shiftX + 'px';
                     node.style.top = '10px';
                 } else {
-                    if(!flag){
+                    if (!flag) {
                         oldLeft = node.style.left;
                         oldTop = node.style.top;
                         flag = 1;
@@ -155,26 +161,27 @@ function mouseHelper(type) {
                 if (event.pageX <= 280 && event.pageY <= 10) {
                     moveAt(280, 10);
                     document.removeEventListener('mousemove', onMouseMove);
+                    $("#" + node.id).css("border", "none");
                     node.onmouseup = null;
                 } else if (event.pageX <= 280 && event.pageY > 10) {
                     moveAt(280, event.pageY);
                     document.removeEventListener('mousemove', onMouseMove);
+                    $("#" + node.id).css("border", "none");
                     node.onmouseup = null;
                 } else if (event.pageY <= 10) {
                     moveAt(event.pageX, 10);
                     document.removeEventListener('mousemove', onMouseMove);
+                    $("#" + node.id).css("border", "none");
                     node.onmouseup = null;
                 } else {
                     moveAt(event.pageX, event.pageY);
                     lids = hostsArray.find(element => element.id == node.id).links_ids;
-                    if(lids.length){
-                        for (const id of lids){
-                            console.log(document.getElementById(id).x1.animVal.value);
-                            console.log(document.getElementById(id).y1.animVal.value);
-                            if(document.getElementById(id).x1.animVal.value == oldLeft){
+                    if (lids.length) {
+                        for (const id of lids) {
+                            if (document.getElementById(id).x1.animVal.value == oldLeft) {
                                 document.getElementById(id).setAttribute('x1', node.style.left);
                                 document.getElementById(id).setAttribute('y1', node.style.top);
-                            }else{
+                            } else {
                                 document.getElementById(id).setAttribute('x2', node.style.left);
                                 document.getElementById(id).setAttribute('y2', node.style.top);
                                 console.log(document.getElementById(id).x1.animVal.value);
@@ -192,19 +199,78 @@ function mouseHelper(type) {
             node.onmouseup = function() {
                 document.removeEventListener('mousemove', onMouseMove);
                 node.onmouseup = null;
-//                console.log('******************');
-//                console.log(node.id);
-//                console.log(node.getBoundingClientRect().top);
-//                console.log(node.getBoundingClientRect().left);
-//                console.log(node.style.top);
-//                console.log(node.style.left);
             };
             node.ondragstart = function() {
                 return false;
             };
+
+            $(function() {
+                $.contextMenu({
+                    selector: '#' + node.id,
+                    callback: function(key, options) { //delete realization
+                        if (key == "delete") {
+                            console.log(hostsArray);
+                            host = hostsArray.find(element => element.id == node.id)
+                                // удаляем нарисованные линии из HTML и указатели на эту связь из массива связей в других узлах
+                            for (let i = 0; i < host.links_ids.length; i++) {
+                                linkId = host.links_ids[i];
+                                $('#' + linkId).remove();
+                                for (let j = 0; j < hostsArray.length; j++) {
+                                    h = hostsArray[j];
+                                    for (let k = 0; k < h.links_ids.length; k++) {
+                                        l = h.links_ids[k]
+                                        if (l == linkId || l.includes(node.id)){
+                                            $('#' + l).remove();
+                                            h.links_ids = removeItemOnce(h.links_ids, l);
+                                        }
+                                    }
+                                }
+                            }
+
+                            //удаляем указатели на данный узел в связанных с ним узлах
+                            for (let j = 0; j < hostsArray.length; j++) {
+                                h = hostsArray[j];
+                                for (let k = 0; k < h.arrLinks.length; k++) {
+                                    n = h.arrLinks[k];
+                                    if (n == node.id)
+                                        h.arrLinks = removeItemOnce(h.arrLinks, n);
+                                }
+                            }
+
+                            hostsArray = removeItemOnce(hostsArray, host);
+                            console.log(hostsArray);
+                            $('#' + node.id).remove();
+                        }
+                    },
+                    items: {
+                        //                        "edit": {name: "Edit", icon: "edit"},
+                        //                        "cut": {name: "Cut", icon: "cut"},
+                        //                        "copy": {name: "Copy", icon: "copy"},
+                        //                        "paste": {name: "Paste", icon: "paste"},
+                        "delete": {
+                            name: "Delete",
+                            icon: "delete",
+                            events: {
+                                keyup: function(e) {
+                                    //delete realization
+                                }
+                            }
+                        },
+                        "sep1": "---------",
+                        "quit": {
+                            name: "Quit",
+                            icon: function() {
+                                return 'context-menu-icon context-menu-icon-quit';
+                            }
+                        }
+                    }
+                });
+            });
+            if (event.button == 2) {
+                document.removeEventListener('mousemove', onMouseMove);
+                node.onmouseup = null;
+            }
         } else {
-
-
             if (nodes.length < 2 && !nodes.includes(node)) {
                 nodes.push(node);
                 $("#" + node.id).css("border", "3px solid #7B68EE");
@@ -220,10 +286,10 @@ function mouseHelper(type) {
                     switchesArray.find(element => element.id == nodes[0].id).arrLinks.push(nodes[1].id);
                 }
 
-                top0 = +nodes[0].style.top.slice(0,-2) + 20;
-                top1 = +nodes[1].style.top.slice(0,-2) + 20;
-                left0 = +nodes[0].style.left.slice(0,-2) + 20;
-                left1 = +nodes[1].style.left.slice(0,-2) + 20;
+                top0 = +nodes[0].style.top.slice(0, -2) + 20;
+                top1 = +nodes[1].style.top.slice(0, -2) + 20;
+                left0 = +nodes[0].style.left.slice(0, -2) + 20;
+                left1 = +nodes[1].style.left.slice(0, -2) + 20;
 
                 if (!$('#svg-id').length) {
                     $('<svg id="svg-id">' +
@@ -233,10 +299,10 @@ function mouseHelper(type) {
                         '" y2="' + top1 +
                         '"/>' +
                         '</svg>').appendTo('#main');
-                     addLinksIds(nodes[0], nodes[1], 'link-' + nodes[0].id + nodes[1].id)
+                    addLinksIds(nodes[0], nodes[1], 'link-' + nodes[0].id + nodes[1].id)
                 } else {
                     let oldHtml = $('#svg-id').html();
-//                    let offset = $('#svg-id').children().length * 10;
+                    //                    let offset = $('#svg-id').children().length * 10;
                     $('#svg-id').html(oldHtml +
                         '<line id="link-' + nodes[0].id + nodes[1].id + '" x1="' + (left0) +
                         '" x2="' + (left1) +
@@ -255,7 +321,7 @@ function mouseHelper(type) {
 
 }
 
-function addLinksIds(node0, node1, id){
+function addLinksIds(node0, node1, id) {
     if (node0.id.includes('switch') && node1.id.includes('host')) {
         switchesArray.find(element => element.id == node0.id).links_ids.push(id);
         hostsArray.find(element => element.id == node1.id).links_ids.push(id);
@@ -269,6 +335,14 @@ function addLinksIds(node0, node1, id){
         switchesArray.find(element => element.id == node0.id).links_ids.push(id);
         switchesArray.find(element => element.id == node1.id).links_ids.push(id);
     }
+}
+
+function removeItemOnce(arr, value) {
+    var index = arr.indexOf(value);
+    if (index > -1) {
+        arr.splice(index, 1);
+    }
+    return arr;
 }
 
 function validateTerms() {
@@ -294,6 +368,7 @@ function addLink() {
     document.getElementById('sub-form').appendChild(i1);
     document.getElementById('sub-form').appendChild(i2);
 }
+
 
 function sendLinks() {
     $.ajax({
