@@ -21,13 +21,12 @@
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a>Добавить узел:</a>
-        <a href="#" onclick="addNode('host')"><img class="side-img" id="host" src="/images/icon-host.png"></a>
-        <a href="#" onclick="addNode('switch')"><img class="side-img" src="/images/icon-switch.png"></a>
-        <a href="#" onclick="addNode('controller')"><img class="side-img" src="/images/icon-controller.png"></a>
+        <a href="#" onclick="addNode('host')"><img class="side-img" id="host" src="/images/icon-host.png" data-hover-src="/images/icon-host-hover.png"></a>
+        <a href="#" onclick="addNode('switch')"><img class="side-img" src="/images/icon-switch.png" data-hover-src="/images/icon-switch-hover.png"></a>
+        <a href="#" onclick="addNode('controller')"><img class="side-img" src="/images/icon-controller.png" data-hover-src="/images/icon-controller-hover.png"></a>
         <div class="div-flex">
+            <a id="addlinks">Добавить связи</a>
             <input class="form-check-input" type="checkbox" id="checkLinks" value="option1">
-            <a>Добавить связи</a>
-            <span id="plus" class="glyphicon glyphicon-plus" aria-hidden="true" onclick="addLink()"></span>
         </div>
         <button class="btn btn-primary" type="submit" onclick="sendLinks()">Проверить</button>
     </div>

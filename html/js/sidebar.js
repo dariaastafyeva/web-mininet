@@ -19,7 +19,7 @@ var nodes = [];
 
 $(document).ready(function($) {
     document.oncontextmenu = function() { return false; }; //отключить выпадающее меню
-
+    createHoverImage();
 });
 
 class Host {
@@ -369,6 +369,15 @@ function addLink() {
     document.getElementById('sub-form').appendChild(i2);
 }
 
+function createHoverImage() {
+  document.querySelectorAll('[data-hover-src]').forEach((img) => {
+    const src = img.getAttribute('src');
+    const srcH = img.getAttribute('data-hover-src');
+
+    img.addEventListener('mouseover', () => {img.src = srcH;})
+    img.addEventListener('mouseout', () => {img.src = src;})
+  });
+}
 
 function sendLinks() {
     $.ajax({
