@@ -204,42 +204,48 @@ function mouseHelper(type) {
                 return false;
             };
 
+            function deleteHelper(delNode, arr) {
+                // удаляем нарисованные линии из HTML и указатели на эту связь из массива связей в других узлах
+                for (let i = 0; i < delNode.links_ids.length; i++) {
+                    linkId = delNode.links_ids[i];
+                    $('#' + linkId).remove();
+                    for (let j = 0; j < arr.length; j++) {
+                        h = arr[j];
+                        for (let k = 0; k < h.links_ids.length; k++) {
+                            l = h.links_ids[k]
+                            if (l == linkId || l.includes(node.id)) {
+                                $('#' + l).remove();
+                                h.links_ids = removeItemOnce(h.links_ids, l);
+                            }
+                        }
+                    }
+                }
+
+                //удаляем указатели на данный узел в связанных с ним узлах
+                for (let j = 0; j < arr.length; j++) {
+                    h = arr[j];
+                    for (let k = 0; k < h.arrLinks.length; k++) {
+                        n = h.arrLinks[k];
+                        if (n == node.id)
+                            h.arrLinks = removeItemOnce(h.arrLinks, n);
+                    }
+                }
+
+                arr = removeItemOnce(arr, delNode);
+                console.log(arr);
+                $('#' + node.id).remove();
+            }
+
             $(function() {
                 $.contextMenu({
                     selector: '#' + node.id,
                     callback: function(key, options) { //delete realization
                         if (key == "delete") {
-                            console.log(hostsArray);
-                            host = hostsArray.find(element => element.id == node.id)
-                                // удаляем нарисованные линии из HTML и указатели на эту связь из массива связей в других узлах
-                            for (let i = 0; i < host.links_ids.length; i++) {
-                                linkId = host.links_ids[i];
-                                $('#' + linkId).remove();
-                                for (let j = 0; j < hostsArray.length; j++) {
-                                    h = hostsArray[j];
-                                    for (let k = 0; k < h.links_ids.length; k++) {
-                                        l = h.links_ids[k]
-                                        if (l == linkId || l.includes(node.id)){
-                                            $('#' + l).remove();
-                                            h.links_ids = removeItemOnce(h.links_ids, l);
-                                        }
-                                    }
-                                }
+                            if (node.id.includes("host")) {
+                                deleteHelper(hostsArray.find(element => element.id == node.id), hostsArray)
+                            } else if (node.id.includes("switch")) {
+                                deleteHelper(switchesArray.find(element => element.id == node.id), switchesArray)
                             }
-
-                            //удаляем указатели на данный узел в связанных с ним узлах
-                            for (let j = 0; j < hostsArray.length; j++) {
-                                h = hostsArray[j];
-                                for (let k = 0; k < h.arrLinks.length; k++) {
-                                    n = h.arrLinks[k];
-                                    if (n == node.id)
-                                        h.arrLinks = removeItemOnce(h.arrLinks, n);
-                                }
-                            }
-
-                            hostsArray = removeItemOnce(hostsArray, host);
-                            console.log(hostsArray);
-                            $('#' + node.id).remove();
                         }
                     },
                     items: {
@@ -370,13 +376,13 @@ function addLink() {
 }
 
 function createHoverImage() {
-  document.querySelectorAll('[data-hover-src]').forEach((img) => {
-    const src = img.getAttribute('src');
-    const srcH = img.getAttribute('data-hover-src');
+    document.querySelectorAll('[data-hover-src]').forEach((img) => {
+        const src = img.getAttribute('src');
+        const srcH = img.getAttribute('data-hover-src');
 
-    img.addEventListener('mouseover', () => {img.src = srcH;})
-    img.addEventListener('mouseout', () => {img.src = src;})
-  });
+        img.addEventListener('mouseover', () => { img.src = srcH; })
+        img.addEventListener('mouseout', () => { img.src = src; })
+    });
 }
 
 function sendLinks() {
